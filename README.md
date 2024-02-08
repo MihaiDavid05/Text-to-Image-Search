@@ -32,9 +32,6 @@ pip install requirements.txt
 ## :hammer_and_wrench: Architecture
 TODO
 
-## :chart_with_downwards_trend: :chart_with_upwards_trend: Challenges and Improvements
-TODO
-
 ## :computer: Usage
 Use the following command to:
 - Download, organise and extract information about the data under  `resources/data_info.csv`
@@ -71,10 +68,21 @@ python service.py
 
 ## Conclusions and suggestions
 
-- It seems that the text2img system does a pretty good job and that the CLIP embeddings are good enough
+- It seems that the text-2-img system does a pretty good job and that the CLIP embeddings are good enough
 
 #### Suggestion for a quantitative evaluation of retrieval accuracy
 TODO
+
+
+## :chart_with_downwards_trend: :chart_with_upwards_trend: Challenges and Improvements
+
+#### Challenges
+- Connection between Jinja templates and FastAPI backend (especially the form data in the template)
+
+#### Improvements
+- Use `poetry` for better dependencies solving
+- Use better models for embedding the images and texts (e.g. maybe use a service like AWS, Eden AI, or models from MTEB leaderboard)
+- Improve FastAPI frontend (or build a Streamlit version)
 
 ## :man: Contributors
 Mihai David - [davidmihai9805@gmail.com](mailto:davidmihai9805@gmail.com)
