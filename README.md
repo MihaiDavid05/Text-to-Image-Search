@@ -63,7 +63,7 @@ python service.py
 #### :disappointed: Bad examples...hmmmmm...or not really.....
 - Search term: **black cat** -> are images of black cats actually in the data?
 ![](docs/black_cat.jpg)
-- Search term: **happiness** -> ..."less harmful than alcohol". But I love chocolate, indeed.
+- Search term: **happiness** -> ..."less harmful than alcohol" they say.... But chocolate brings me happiness, indeed.
 ![](docs/happiness.jpg)
 
 ## Conclusions and suggestions
