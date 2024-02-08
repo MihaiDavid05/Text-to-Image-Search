@@ -42,17 +42,31 @@ To launch the FastAPI app, execute the following command:
 python service.py
 ```
 
+## 
 ## :fire: Results
 
-Good examples:
+#### :smiley: Good examples:
 - Search term: **beer**
-[](docs/beer.jpg)
+![](docs/beer.jpg)
 - Search term: **astronaut**
-[](docs/astronaut.jpg)
+![](docs/astronaut.jpg)
 - Search term: **fries with ketchup**
-[](docs/fries_with_ketchup.jpg)
+![](docs/fries_with_ketchup.jpg)
+- Search term: **bad weather**
+![](docs/bad_weather.jpg)
 
-- Bad examples
+#### :disappointed: Bad examples...hmmmmm...or not really.....
+- Search term: **black cat** -> are images of black cats actually in the data?
+![](docs/black_cat.jpg)
+- Search term: **happiness** -> ..."less harmful than alcohol". But I love chocolate, indeed.
+![](docs/happiness.jpg)
+
+## Conclusions and suggestions
+
+- It seems that the text2img system does a pretty good job and that the CLIP embeddings are good enough
+
+#### Suggestion for a quantitative evaluation of retrieval accuracy
+TODO
 
 ## :man: Contributors
 Mihai David - [davidmihai9805@gmail.com](mailto:davidmihai9805@gmail.com)
