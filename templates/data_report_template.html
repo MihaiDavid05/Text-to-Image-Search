@@ -20,25 +20,26 @@
         }
         .plot {
             margin: 20px 0;
+            display: inline-flex;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Exploratory Data Analysis Report</h1>
-        <p>{{ text_nr_imgs }}</p>
-        <p>{{ text_high_res }}</p>
-        <p>{{ text_low_res }}</p>
+        <p>There are {{ nr_imgs }} images in the dataset.</p>
+        <p>The highest resolution of an image is {{ high_res }}.</p>
+        <p>The lowest resolution of an image is {{ low_res }}.</p>
         {% for plot_path in plot_paths %}
         <div class="plot">
             <img src="{{ plot_path }}" alt="Plot">
         </div>
         {% endfor %}
-        <p>{{ text_examples }}</p>
+        <p>Example of 5 random images</p>
         <div class="plot">
             <img src="{{ images }}" width="500" height="300" alt="Plot">
         </div>
-
     </div>
 </body>
 </html>

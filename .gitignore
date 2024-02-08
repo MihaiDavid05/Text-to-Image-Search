@@ -1,5 +1,5 @@
 # Ignore folders
-docs/
+resources/
 images/
 qdrant_storage/
 .idea/

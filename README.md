@@ -13,6 +13,8 @@ You do not need to download the data, as everything is managed automatically in 
 ├───templates                   <- includes Jinja templates used in the project
 │   ├───data_report_template.py
 │   └───images_template.py
+├───src                         <- FastAPI dources
+│   └───schemas.py              <- schemas for FastAPI
 ├───utils
 │   ├───data.py                 <- data related utils
 │   ├───search.py               <- search related utils
@@ -26,10 +28,11 @@ TODO
 
 ## :computer: Usage
 Use the following command to:
-- Download, organise and extract information about the data
-- Create data report in a `.html` file stored in a newly created `docs` directory
-- Build the image embeddings and store them under `docs/image_embeddings.parquet`
-- Populate a Qdrant collection with the image embeddings
+- Download, organise and extract information about the data under  `resources/data_info.csv`
+- Create data report under `resources/data_report.html`
+- Build the image embeddings and store them under `resources/image_embeddings.parquet`
+- Create and populate a Qdrant collection with the image embeddings
+
 ```bash
 python prepare.py
 ```
@@ -40,7 +43,16 @@ python service.py
 ```
 
 ## :fire: Results
-TODO
+
+Good examples:
+- Search term: **beer**
+[](docs/beer.jpg)
+- Search term: **astronaut**
+[](docs/astronaut.jpg)
+- Search term: **fries with ketchup**
+[](docs/fries_with_ketchup.jpg)
+
+- Bad examples
 
 ## :man: Contributors
 Mihai David - [davidmihai9805@gmail.com](mailto:davidmihai9805@gmail.com)

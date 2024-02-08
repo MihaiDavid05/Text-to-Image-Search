@@ -1,6 +1,7 @@
 import shutil
 import requests
 import os
+from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -48,10 +49,13 @@ def get_data(imgs_path: str = 'images'):
         os.makedirs(imgs_path)
 
     # Download and extract each zip file
-    for url in urls:
+    print("Downloading data...")
+    for url in tqdm(urls):
         download_and_extract(url, extract_to=imgs_path)
+    print("Finished")
 
     # Copy extracted files to the target directory
+    print("Organising data...")
     for folder in ['0', '1']:
         src_path = os.path.join(imgs_path, folder)
         for filename in os.listdir(src_path):
@@ -59,17 +63,31 @@ def get_data(imgs_path: str = 'images'):
 
         # Remove the old directory
         shutil.rmtree(src_path)
+    print("Finished")
 
 
-def store_image_info(imgs_path: str = 'images') -> pd.DataFrame:
+def store_image_info(imgs_path: str = 'images', docs_path: str = 'resources') -> pd.DataFrame:
     """
     Creates a dataframe with info about images stored at img_path.
     Args:
         imgs_path: Path to the images directory
+        docs_path: Dir path to the images information csv
 
     Returns:
         DataFrame with all information
     """
+
+    if not os.path.exists(docs_path):
+        os.makedirs(docs_path)
+
+    # Check if data already exists and return it if so
+    data_info_path = os.path.join(docs_path, 'data_info.csv')
+    if os.path.isfile(data_info_path):
+        print("Image data already exists. Reading it...")
+        results_df = pd.read_csv(data_info_path)
+        print("Finished.")
+
+        return results_df
 
     # Get images names
     all_imgs = os.listdir(imgs_path)
@@ -78,7 +96,8 @@ def store_image_info(imgs_path: str = 'images') -> pd.DataFrame:
     columns_df = ['path', 'width', 'height', 'area', 'aspect_ratio']
     imgs_df = pd.DataFrame(columns=columns_df)
 
-    for im_name in all_imgs:
+    print("Storing image information...")
+    for im_name in tqdm(all_imgs):
         im_path = os.path.join(imgs_path, im_name)
 
         # Read image
@@ -86,8 +105,15 @@ def store_image_info(imgs_path: str = 'images') -> pd.DataFrame:
         w, h = im.size
 
         # Add row to dataframe
-        new_row = pd.DataFrame([[im_path, w, h, w * h, w / h]], columns=columns_df)
-        imgs_df = pd.concat([imgs_df, new_row])
+        new_df = pd.DataFrame([[im_path, w, h, w * h, w / h]], columns=columns_df)
+        imgs_df = new_df.copy() if imgs_df.empty else pd.concat([imgs_df, new_df])
+
+    result_df = imgs_df.reset_index(drop=True)
+
+    # Save the data to file
+    result_df.to_csv(data_info_path, index=False)
+
+    print("Finished.")
 
     return imgs_df.reset_index(drop=True)
 
@@ -103,26 +129,29 @@ def specs(x, **kwargs):
     plt.axvline(x.median(), c='orange', ls='--', lw=1.5, label='median')
 
 
-def create_report(im_df: pd.DataFrame, docs_path: str = 'docs'):
+def create_report(im_df: pd.DataFrame, docs_path: str = 'resources'):
     """
-    Creates report for images under 'imgs_path'.
+    Creates report for the dataset.
     Args:
         im_df: DataFrame containing images info
-        docs_path: Path to the images in the report
+        docs_path: Dir path to the report
     """
 
     if not os.path.exists(docs_path):
         os.makedirs(docs_path)
 
-    # Display the number of images
-    text_nr_imgs = f"There are {len(im_df)} images in the dataset.\n"
+    # Check for report existence
+    data_report_path = os.path.join(docs_path, 'data_report.html')
+    if os.path.isfile(data_report_path):
+        print("Report already created.")
+        return
+
+    print("Creating data report...")
 
     # Compute biggest and lowest resolutions
     areas_sorted = im_df.sort_values(by='area', ascending=False)
     highest_resolution = areas_sorted.iloc[0][['width', 'height']].values
     lowest_resolution = areas_sorted.iloc[-1][['width', 'height']].values
-    text_high_res = f"Highest resolution is {highest_resolution[0]} x {highest_resolution[1]}"
-    text_low_res = f"Lowest resolution is {lowest_resolution[0]} x {lowest_resolution[1]}\n"
 
     # Plot distribution of aspect ratio
     plot_path1 = os.path.join(docs_path, 'area_distrib.png')
@@ -139,11 +168,9 @@ def create_report(im_df: pd.DataFrame, docs_path: str = 'docs'):
     sns_plot.savefig(plot_path2)
     plt.close(sns_plot.fig)
 
-    # Select 5 random images
-    text_example_imgs = "Example of 5 random images:\n"
+    # Select 5 random images and plot them
     random_imgs = np.random.choice(im_df['path'], size=5, replace=False)
 
-    # Plot images
     plot_path3 = os.path.join(docs_path, 'images.png')
     fig, axes = plt.subplots(1, 5, figsize=(12, 6))
     for i, im_path in enumerate(random_imgs):
@@ -153,23 +180,24 @@ def create_report(im_df: pd.DataFrame, docs_path: str = 'docs'):
     fig.savefig(plot_path3)
     plt.close()
 
-    # Prepare your data for the template (e.g., text content and plot paths)
+    # Prepare data for the template
     data = {
-        'text_nr_imgs': text_nr_imgs,
-        'text_high_res': text_high_res,
-        'text_low_res': text_low_res,
-        'plot_paths': [plot_path1, plot_path2],
-        'text_examples': text_example_imgs,
-        'images': plot_path3
+        'nr_imgs': len(im_df),
+        'high_res': f"{highest_resolution[0]} x {highest_resolution[1]}",
+        'low_res': f"{lowest_resolution[0]} x {lowest_resolution[1]}",
+        'plot_paths': [os.path.join('..', plot_path1), os.path.join('..', plot_path2)],
+        'images': os.path.join('..', plot_path3)
     }
 
-    # Load your Jinja2 template
+    # Load Jinja2 template
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('data_report_template.html')
 
-    # Render the template with your data
+    # Render the template with data
     html_output = template.render(**data)
 
     # Write the HTML content to a file
-    with open('data_report.html', 'w') as file:
+    with open(data_report_path, 'w') as file:
         file.write(html_output)
+
+    print("Finished.")

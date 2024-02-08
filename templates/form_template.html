@@ -22,20 +22,26 @@
             margin: auto;
             overflow: hidden;
         }
+        .error {
+            border: 1px solid red;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <form action="/api/search" method="post">
         <label for="text">Enter text for image search:</label>
-        <input type="text" id="text" name="text">
+        {% if error %}
+        <input type="text" id="text-error" name="text" required placeholder="Enter search term" class="error">
         <input type="submit" value="Search">
+        <p class="error-message">"Enter only letters and spaces!"</p>
+        {% else %}
+        <input type="text" id="text" name="text" required placeholder="Enter search term">
+        <input type="submit" value="Search">
+        {% endif %}
     </form>
-    <div class="container">
-        {% for name in names %}
-        <div class="img">
-            <img src="{{ url_for('images', path=name) }}" alt="Image">
-        </div>
-        {% endfor %}
-    </div>
 </body>
 </html>

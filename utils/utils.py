@@ -69,7 +69,7 @@ def calculate_embedding(model, image_path: str) -> Optional[List[float]]:
         return None
 
 
-def build_image_embeddings(df: pd.DataFrame, save_path: str = 'docs'):
+def build_image_embeddings(df: pd.DataFrame, save_path: str = 'resources'):
     """
     Builds and save image embeddings
     Args:
@@ -92,6 +92,8 @@ def build_image_embeddings(df: pd.DataFrame, save_path: str = 'docs'):
             print("Embeddings were already created")
             return
 
+    print("Building image embeddings...")
+
     # Set model for embedding the images
     image_model = SentenceTransformer("clip-ViT-B-32")
 
@@ -102,9 +104,9 @@ def build_image_embeddings(df: pd.DataFrame, save_path: str = 'docs'):
         if torch.cuda.is_available():
             image_model = image_model.to('cuda')
         else:
-            print("CUDA is not available. Using CPU instead.")
+            print("CUDA is not available. Using CPU instead. This may take some time...")
     except ModuleNotFoundError:
-        print("torch is not even installed")
+        print("Torch is not installed")
 
     # Compute embeddings
     df["embedding"] = df["path"].progress_apply(lambda x: calculate_embedding(image_model, x))
@@ -114,8 +116,10 @@ def build_image_embeddings(df: pd.DataFrame, save_path: str = 'docs'):
     # Save to parquet file
     df.to_parquet(embeddings_path)
 
+    print("Finished")
 
-def update_db_collection(collection_name: str = 'images', vectors_dir_path: str = 'docs'):
+
+def update_db_collection(collection_name: str = 'images', vectors_dir_path: str = 'resources'):
     """
     Create a Qdrant collection
     Args:
@@ -133,11 +137,14 @@ def update_db_collection(collection_name: str = 'images', vectors_dir_path: str 
 
     # Load all vectors into memory
     im_df = pd.read_parquet(embeddings_path)
+    print(f"There are {len(im_df)} images.")
 
     # Create payloads and vectors
     paths = im_df['path'].values
     payloads = [{'path': p} for p in paths]
     vectors = list(map(list, im_df["embedding"].tolist()))
+
+    print("Populating Qdrant collection with the embeddings...")
 
     # Create collection
     qdrant_client.recreate_collection(
@@ -154,5 +161,5 @@ def update_db_collection(collection_name: str = 'images', vectors_dir_path: str 
         batch_size=256,
     )
 
-    print(f"There are {qdrant_client.count(collection_name)} points "
-          f"in the collection {collection_name}")
+    print(f"There are {qdrant_client.count(collection_name)} points created "
+          f"in the Qdrant collection named '{collection_name}'")
