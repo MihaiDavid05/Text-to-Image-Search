@@ -164,7 +164,7 @@ def create_report(im_df: pd.DataFrame, docs_path: str = 'docs'):
     }
 
     # Load your Jinja2 template
-    env = Environment(loader=FileSystemLoader('utils'))
+    env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('data_report_template.html')
 
     # Render the template with your data

@@ -2,7 +2,7 @@ import os.path
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from typing import List, Optional
+from typing import List, Dict, Optional
 from PIL import Image
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
@@ -21,14 +21,14 @@ class Text2Img:
         # Initialize Qdrant client
         self.qdrant_client = QdrantClient("http://localhost:6333")
 
-    def search(self, text: str):
+    def search(self, text: str) -> List[Dict[str, str]]:
         """
         Search function for the vector database
         Args:
             text: text used in the search
 
         Returns:
-            List of payloads (images paths)
+            List of payloads (images paths more exactly)
         """
         # Convert text query into vector
         vector = self.text_encoder.encode(text).tolist()
