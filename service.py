@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
-from utils.text2img import Text2Img
+from utils.search import Text2Img
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -26,6 +26,7 @@ async def search(request: Request, text: str):
 
     # Form the data with images names, needed for the Jinja template and return template response
     data = {'names': ['/' + res['path'].split('/')[-1] for res in results]}
+
     return templates.TemplateResponse(request=request, name='images_template.html', context=data)
 
     # OR, you can directly download the images
