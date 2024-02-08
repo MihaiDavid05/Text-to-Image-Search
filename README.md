@@ -26,6 +26,12 @@ You do not need to download the data, as everything is managed automatically in 
 ## :gear: Installation
 TODO
 
+## :hammer_and_wrench: Architecture
+TODO
+
+## :chart_with_downwards_trend: :chart_with_upwards_trend: Challenges and Improvements
+TODO
+
 ## :computer: Usage
 Use the following command to:
 - Download, organise and extract information about the data under  `resources/data_info.csv`
@@ -42,7 +48,6 @@ To launch the FastAPI app, execute the following command:
 python service.py
 ```
 
-## 
 ## :fire: Results
 
 #### :smiley: Good examples:
