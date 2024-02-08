@@ -24,7 +24,10 @@ You do not need to download the data, as everything is managed automatically in 
 ```
 
 ## :gear: Installation
-TODO
+Run the following command:
+```bash
+pip install requirements.txt
+```
 
 ## :hammer_and_wrench: Architecture
 TODO
