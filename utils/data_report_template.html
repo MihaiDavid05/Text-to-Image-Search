@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploratory Data Analysis Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+        }
+        .container {
+            width: 95%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .plot {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exploratory Data Analysis Report</h1>
+        <p>{{ text_nr_imgs }}</p>
+        <p>{{ text_high_res }}</p>
+        <p>{{ text_low_res }}</p>
+        {% for plot_path in plot_paths %}
+        <div class="plot">
+            <img src="{{ plot_path }}" alt="Plot Image">
+        </div>
+        {% endfor %}
+        <p>{{ text_examples }}</p>
+        <div class="plot">
+            <img src="{{ images }}" width="500" height="300" alt="Plot Image">
+        </div>
+
+    </div>
+</body>
+</html>

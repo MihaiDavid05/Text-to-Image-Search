@@ -1,0 +1,7 @@
+# Ignore folders
+docs/
+images/
+qdrant_storage/
+.idea/
+__pycache__/
+utils/__pycache__/

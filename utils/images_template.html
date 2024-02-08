@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text 2 Images Retrieval Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 20px;
+            justify-content: center;
+            width: 95%;
+            margin: auto;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% for name in names %}
+        <div class="img">
+            <img src="{{ url_for('images', path=name) }}" alt="Image">
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
