@@ -37,3 +37,6 @@ class Text2Img:
         payloads = [hit.payload for hit in search_result]
 
         return payloads
+
+    def evaluate(self):
+        pass
