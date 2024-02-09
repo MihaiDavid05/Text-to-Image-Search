@@ -30,7 +30,16 @@ pip install requirements.txt
 ```
 
 ## :hammer_and_wrench: Architecture
-TODO
+- Both image and text embeddings (dim=512) are created using a `CLIP-ViT-B-32` model
+- I use Jinja templates for creating the data report that uses local plots
+- I use Jinja templates to render the search form and images in the FastAPI app
+- The search form is validated to contain only words (letters) and spaces
+- After entering the text in a search form, I am making a POST to the API which does the following:
+  - Send the form data to the search engine, which embeds the text and performs ANN
+  - The search engine outputs the payload of the 5 most relevant images. The payload consists of the images paths.
+  - The local images paths are sent to a Jinja template so that they are displayed in the same UI as the search form
+
+![](docs/architecture.jpg)
 
 ## :computer: Usage
 Use the following command to:
@@ -82,7 +91,6 @@ TODO
 #### Improvements
 - Use `poetry` for better dependencies solving
 - Use better models for embedding the images and texts (e.g. maybe use a service like AWS, Eden AI, or models from MTEB leaderboard)
-- Improve FastAPI frontend (or build a Streamlit version)
 
 ## :man: Contributors
 Mihai David - [davidmihai9805@gmail.com](mailto:davidmihai9805@gmail.com)

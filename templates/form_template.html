@@ -5,39 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text 2 Images Retrieval</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f0f0f0;
         }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .container {
+
+        form {
+            margin-top: 30px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 20px;
-            justify-content: center;
-            width: 95%;
-            margin: auto;
-            overflow: hidden;
+            flex-direction: column;
+            gap: 15px;
+            width: 90%;
+            max-width: 500px;
         }
+
+        input[type="text"], input[type="submit"] {
+            padding: 15px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+        }
+
+        input[type="text"] {
+            border-color: #007bff;
+            width: 90%;
+            font-size: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
         .error {
-            border: 1px solid red;
+            border-color: red;
         }
+
         .error-message {
             color: red;
-            font-size: 0.9em;
+            font-size: 1em;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <form action="/api/search" method="post">
-        <label for="text">Enter text for image search:</label>
         {% if error %}
         <input type="text" id="text-error" name="text" required placeholder="Enter search term" class="error">
         <input type="submit" value="Search">
-        <p class="error-message">"Enter only letters and spaces!"</p>
+        <p class="error-message">Enter only words and spaces (but not only spaces)!</p>
         {% else %}
         <input type="text" id="text" name="text" required placeholder="Enter search term">
         <input type="submit" value="Search">

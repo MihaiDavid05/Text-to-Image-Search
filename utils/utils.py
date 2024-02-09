@@ -141,12 +141,12 @@ def update_db_collection(collection_name: str = 'images', vectors_dir_path: str 
 
     # Create payloads and vectors
     paths = im_df['path'].values
-    payloads = [{'path': p} for p in paths]
-    vectors = list(map(list, im_df["embedding"].tolist()))
+    payloads = iter([{'path': p} for p in paths])
+    vectors = iter(list(map(list, im_df["embedding"].tolist())))
 
     print("Populating Qdrant collection with the embeddings...")
 
-    # Create collection
+    # (Re-)create collection
     qdrant_client.recreate_collection(
         collection_name=collection_name,
         vectors_config=VectorParams(size=512, distance=Distance.COSINE),
