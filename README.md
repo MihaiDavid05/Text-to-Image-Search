@@ -40,10 +40,7 @@ pip install requirements.txt
   - The search engine outputs the payload of the 5 most relevant images. The payload consists of the images paths.
   - The local images paths are sent to a Jinja template so that they are displayed in the same UI as the search form
 
-<object data="docs/architecture.pdf" type="application/pdf" width="700px" height="700px">
-</object>
-
-[//]: # (![]&#40;docs/architecture.pdf&#41;)
+![](docs/architecture.jpg)
 
 ## :computer: Usage
 Use the following command to:
