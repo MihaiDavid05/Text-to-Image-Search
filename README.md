@@ -19,7 +19,7 @@ You do not need to download the data, as everything is managed automatically in 
 │   ├───data.py                 <- data related utils
 │   ├───search.py               <- search related utils
 │   └───utils.py                <- general utils
-├───evaluate_label.py           <- endpoint for evaluating the algorithm and creating labelled dataset
+├───evaluate.py                 <- endpoint for evaluating the algorithm
 ├───service.py                  <- endpoint for launching FastAPI app
 └───prepare.py                  <- endpoint for creating data report and populating the images vector DB
 ```
