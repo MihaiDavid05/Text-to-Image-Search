@@ -98,7 +98,7 @@ I already provide an example at `docs/labels.txt` file.
 ![](docs/astronaut.jpg)
 - Search term: **fries with ketchup**
 ![](docs/fries_with_ketchup.jpg)
-- Search term: **bad weather**
+- Search term: **bad weather** -> we observe that the system is considering images containing the word `bad`, like `badminton`
 ![](docs/bad_weather.jpg)
 
 #### :disappointed: Bad examples...hmmmmm...or not really.....
