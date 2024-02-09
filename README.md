@@ -19,17 +19,38 @@ You do not need to download the data, as everything is managed automatically in 
 │   ├───data.py                 <- data related utils
 │   ├───search.py               <- search related utils
 │   └───utils.py                <- general utils
+├───evaluate_label.py           <- endpoint for evaluating the algorithm and creating labelled dataset
 ├───service.py                  <- endpoint for launching FastAPI app
 └───prepare.py                  <- endpoint for creating data report and populating the images vector DB
 ```
 
 ## :gear: Installation
-Run the following command:
+1. Install [Docker](https://docs.docker.com/engine/install/) locally
+
+2. Install all the libraries:
 ```bash
 pip install requirements.txt
 ```
 
+3. Get the Qdrant image from Docker Hub:
+```bash
+docker pull qdrant/qdrant
+```
+4. Start Qdrant inside of Docker:
+
+  - Linux:
+```bash
+docker run -p 6333:6333 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
+```
+- Windows:
+```bash
+docker run -p 6333:6333 -v %cd%/qdrant_storage:/qdrant/storage qdrant/qdrant
+```
+
 ## :hammer_and_wrench: Architecture
+
+![](docs/architecture.jpg)
+
 **Details**:
 - Both image and text embeddings (dim=512) are created using a `CLIP-ViT-B-32` model
 - I use Jinja templates for creating the data report that uses local plots
@@ -39,8 +60,9 @@ pip install requirements.txt
   - Send the form data to the search engine, which embeds the text and performs ANN
   - The search engine outputs the payload of the 5 most relevant images. The payload consists of the images paths.
   - The local images paths are sent to a Jinja template so that they are displayed in the same UI as the search form
-
-![](docs/architecture.jpg)
+- I tweaked the HNSW parameters (even though not necessary), as the dataset was not that big, thus the indexing time was manageable:
+  - I set `m=32` (the number of edges per node)
+  - I set `ef_construct=200` (the number of neighbours to consider during the index building)
 
 ## :computer: Usage
 Use the following command to:
@@ -57,6 +79,13 @@ To launch the FastAPI app, execute the following command:
 ```bash
 python service.py
 ```
+
+To evaluate the algorithm according to [Evaluation section](#eval), execute the following command:
+```bash
+python evaluate.py <PATH_TO_LABELS_TXT> --label
+```
+**IMPORTANT NOTE**: The queries have to be defined in `<PATH_TO_LABELS_TXT>` file, one on each row.
+I already provide an example at `docs/labels.txt` file.
 
 ## :fire: Results
 
@@ -76,13 +105,10 @@ python service.py
 - Search term: **happiness** -> ..."less harmful than alcohol" they say.... But chocolate brings me happiness, indeed.
 ![](docs/happiness.jpg)
 
-## Conclusions and suggestions
-
-- It seems that the text-2-img system does a pretty good job and that the CLIP embeddings are good enough
-
-#### Suggestion for a quantitative evaluation of retrieval accuracy
-TODO
-
+## <a name="eval"></a> :white_check_mark: Evaluation of retrieval accuracy
+By following the best practices offered by Qdrant [here](https://qdrant.tech/documentation/tutorials/retrieval-quality/),
+I evaluated my ANN algorithm by using `precision@k` with `k=30`, by comparing it with the full kNN search and 
+seeing how well the ANN algorithm approximates the exact search. 
 
 ## :chart_with_downwards_trend: :chart_with_upwards_trend: Challenges and Improvements
 
@@ -92,6 +118,11 @@ TODO
 #### Improvements
 - Use `poetry` for better dependencies solving
 - Use better models for embedding the images and texts (e.g. maybe use a service like AWS, Eden AI, or models from MTEB leaderboard)
+- Use a feature store to store the embeddings instead of storing them locally
+- 
+## :top: Conclusions
+
+- It seems that the text-2-img system does a pretty good job and that the CLIP embeddings are good enough
 
 ## :man: Contributors
 Mihai David - [davidmihai9805@gmail.com](mailto:davidmihai9805@gmail.com)

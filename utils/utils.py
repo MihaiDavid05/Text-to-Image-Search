@@ -1,18 +1,67 @@
 import io
 import os
 import zipfile
+import requests
+import shutil
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from typing import Optional
 from tqdm import tqdm
 from typing import List, Dict
 from fastapi import Response
 from PIL import Image
 from qdrant_client.models import VectorParams, Distance
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
+from zipfile import ZipFile
+
 
 tqdm.pandas()
+
+
+def read_txt(path: str) -> List[str]:
+    """
+    Reads a text file line by line and returns a list with elements from each row
+    Args:
+        path: path to the text file
+
+    Returns: list with rows as elements
+
+    """
+    data = []
+    with open(path, 'r') as file:
+        # Read and store each line
+        for line in file:
+            data.append(line.strip())
+    return data
+
+
+def download_and_extract(url: str, extract_to: str = '.'):
+    """
+    Download a zip file from the specified URL and extract it to the given directory.
+    Args:
+        url: url of the data
+        extract_to: path where to extract data
+    """
+    local_filename = url.split('/')[-1]
+    with requests.get(url, stream=True) as r:
+        with open(local_filename, 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+    with ZipFile(local_filename, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+    os.remove(local_filename)
+
+
+def specs(x, **kwargs):
+    """
+    Helper to add mean and median on the plot
+    Args:
+        x: name of a column from the dataframe
+        kwargs: other parameters
+    """
+    plt.axvline(x.mean(), c='k', ls='-', lw=1.5, label='mean')
+    plt.axvline(x.median(), c='orange', ls='--', lw=1.5, label='median')
 
 
 def zip_files(filenames: List[Dict[str, str]]) -> Response:
@@ -119,12 +168,17 @@ def build_image_embeddings(df: pd.DataFrame, save_path: str = 'resources'):
     print("Finished")
 
 
-def update_db_collection(collection_name: str = 'images', vectors_dir_path: str = 'resources'):
+def update_db_collection(collection_name: str = 'images',
+                         vectors_dir_path: str = 'resources',
+                         m: int = 16,
+                         ef_construct: int = 100):
     """
     Create a Qdrant collection
     Args:
         collection_name: name of the collection to store the vector db points
         vectors_dir_path: paths to the directory containing the embeddings file
+        m:number of edges per node
+        ef_construct: number of neighbours to consider during the index building
     """
 
     embeddings_path = os.path.join(vectors_dir_path, "images_embeddings.parquet")
@@ -159,7 +213,18 @@ def update_db_collection(collection_name: str = 'images', vectors_dir_path: str 
         payload=payloads,
         ids=None,
         batch_size=256,
+        hnsw_config=models.HnswConfigDiff(
+            m=m,
+            ef_construct=ef_construct,
+        )
     )
+
+    # Wait to have all data indexed
+    while True:
+        collection_info = qdrant_client.get_collection(collection_name=collection_name)
+        if collection_info.status == models.CollectionStatus.GREEN:
+            # Collection status is green, which means the indexing is finished
+            break
 
     print(f"There are {qdrant_client.count(collection_name)} points created "
           f"in the Qdrant collection named '{collection_name}'")
