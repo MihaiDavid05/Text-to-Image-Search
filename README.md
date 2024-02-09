@@ -113,7 +113,7 @@ I evaluated my ANN algorithm by using `precision@k` with `k=30`, by comparing it
 seeing how well the ANN algorithm approximates the exact search. For the very small list of queries defined in `docs/label.txt`, the `precision=1.0`.
 
 For a quantitative evaluation of retrieval accuracy we need a set of ground truths, labeled by someone, manually.
-The test set will contain text queries and the associated most relevant K images (the order based on score does not matter).
+The test set will contain text queries and the associated most relevant K images (the order does not matter).
 We will define another separate test set of text queries and run them through a full kNN algorithm, to obtain the K most relevant images.
 We can use mean Average Precision as a metric between the K ground truths and the K predicted images.
 
