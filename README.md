@@ -108,7 +108,7 @@ I already provide an example at `docs/labels.txt` file.
 ## <a name="eval"></a> :white_check_mark: Evaluation of retrieval accuracy
 By following the best practices offered by Qdrant [here](https://qdrant.tech/documentation/tutorials/retrieval-quality/),
 I evaluated my ANN algorithm by using `precision@k` with `k=30`, by comparing it with the full kNN search and 
-seeing how well the ANN algorithm approximates the exact search. 
+seeing how well the ANN algorithm approximates the exact search. For the very small list of queries defined in `docs/label.txt`, the `precision=1.0`.
 
 ## :chart_with_downwards_trend: :chart_with_upwards_trend: Challenges and Improvements
 
@@ -119,7 +119,7 @@ seeing how well the ANN algorithm approximates the exact search.
 - Use `poetry` for better dependencies solving
 - Use better models for embedding the images and texts (e.g. maybe use a service like AWS, Eden AI, or models from MTEB leaderboard)
 - Use a feature store to store the embeddings instead of storing them locally
-- 
+- Use a different storage than local for th images (e.g. a cloud provider)
 ## :top: Conclusions
 
 - It seems that the text-2-img system does a pretty good job and that the CLIP embeddings are good enough
