@@ -82,7 +82,7 @@ python service.py
 
 To evaluate the algorithm according to [Evaluation section](#eval), execute the following command:
 ```bash
-python evaluate.py <PATH_TO_LABELS_TXT> --label
+python evaluate.py <PATH_TO_LABELS_TXT>
 ```
 **IMPORTANT NOTE**: The queries have to be defined in `<PATH_TO_LABELS_TXT>` file, one on each row.
 I already provide an example at `docs/labels.txt` file.
