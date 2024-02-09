@@ -30,6 +30,7 @@ pip install requirements.txt
 ```
 
 ## :hammer_and_wrench: Architecture
+**Details**:
 - Both image and text embeddings (dim=512) are created using a `CLIP-ViT-B-32` model
 - I use Jinja templates for creating the data report that uses local plots
 - I use Jinja templates to render the search form and images in the FastAPI app
@@ -39,7 +40,10 @@ pip install requirements.txt
   - The search engine outputs the payload of the 5 most relevant images. The payload consists of the images paths.
   - The local images paths are sent to a Jinja template so that they are displayed in the same UI as the search form
 
-![](docs/architecture.pdf)
+<object data="docs/architecture.pdf" type="application/pdf" width="700px" height="700px">
+</object>
+
+[//]: # (![]&#40;docs/architecture.pdf&#41;)
 
 ## :computer: Usage
 Use the following command to:
