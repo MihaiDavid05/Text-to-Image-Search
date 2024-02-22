@@ -112,8 +112,11 @@ def calculate_embedding(model, image_path: str) -> Optional[List[float]]:
     """
     try:
         image = Image.open(image_path)
-        return model.encode(image).tolist()
-    except:
+        encoded_im = model.encode(image).tolist()
+        image.close()
+        return encoded_im
+    
+    except Exception:
         print(f"Error when embedding image {image_path}")
         return None
 
@@ -212,11 +215,7 @@ def update_db_collection(collection_name: str = 'images',
         vectors=vectors,
         payload=payloads,
         ids=None,
-        batch_size=256,
-        hnsw_config=models.HnswConfigDiff(
-            m=m,
-            ef_construct=ef_construct,
-        )
+        batch_size=256
     )
 
     # Wait to have all data indexed
