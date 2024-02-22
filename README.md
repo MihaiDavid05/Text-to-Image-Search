@@ -62,9 +62,6 @@ docker run -p 6333:6333 -v %cd%/qdrant_storage:/qdrant/storage qdrant/qdrant
   - Send the form data to the search engine, which embeds the text and performs ANN
   - The search engine outputs the payload of the 5 most relevant images. The payload consists of the images paths.
   - The local images paths are sent to a Jinja template so that they are displayed in the same UI as the search form
-- I tweaked the HNSW parameters (even though not necessary), as the dataset was not that big, thus the indexing time was manageable:
-  - I set `m=32` (the number of edges per node)
-  - I set `ef_construct=200` (the number of neighbours to consider during the index building)
 
 ## :computer: Usage
 Use the following command to:
